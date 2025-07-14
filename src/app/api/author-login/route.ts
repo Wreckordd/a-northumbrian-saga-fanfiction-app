@@ -3,9 +3,18 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const { password } = await request.json();
+
+    const authorPassword = process.env.AUTHOR_PASSWORD;
+    if (!authorPassword) {
+      console.error('Author password environment variable is not set.');
+      return NextResponse.json(
+        { success: false, message: 'Server configuration error: author password not set.' },
+        { status: 500 }
+      );
+    }
     
     // Simple password check for author
-    if (password === "northumbria2024") {
+    if (password === authorPassword) {
       return NextResponse.json({
         success: true,
         message: 'Author login successful!',
